@@ -1,0 +1,222 @@
+"Phrases"
+{
+	// ---------- HUD Components ---------- //
+	// DO NOT MAKE NAMES LONGER THAN DISPLAYED HERE //
+	"HudStartZone"
+	{
+		"en"		"Start Zone"
+	}
+	"HudZoneTier"
+	{
+		"#format"	"{1:d}"
+		"en"		"Tier {1}"
+	}
+	"HudInStartZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Start Zone\n\n{1}"
+	}
+	"HudInBonusStartZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Bonus Start Zone\n\n{1}"
+	}
+	"HudInSolobonusStartZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Solo Start Zone\n\n{1}"
+	}
+	"HudInStartZoneCSGO"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Start Zone\n\n\t\t\t{1}"
+	}
+	"HudEndZone"
+	{
+		"en"		"End Zone"
+	}
+	"HudInEndZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In End Zone\n\n{1}"
+	}
+	"HudInBonusEndZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Bonus End Zone\n\n{1}"
+	}
+	"HudInSolobonusEndZone"
+	{
+		"#format"	"{1:d}"
+		"en"		"In Solo End Zone\n\n{1}"
+	}
+	"HudInEndZoneCSGO"
+	{
+		"#format"	"{1:d}"
+		"en"		"In End Zone\n\n\t\t\t{1}"
+	}
+	"HudAwaitingForYourPartner"
+	{
+		"en"		"Awaiting for your Partner\n"
+	}
+	"HudPaused"
+	{
+		"en"		"[Paused]"
+	}
+	"HudTimeText"
+	{
+		"en"		"Time"
+	}
+	"HudBestText"
+	{
+		"en"		"Best"
+	}
+	"HudPersonalBestText"
+	{
+		"en"		"PB"
+	}
+	"HudJumpsText"
+	{
+		"en"		"Jumps"
+	}
+	"HudStyleText"
+	{
+		"en"		"Style"
+	}
+	"HudSpeedText"
+	{
+		"en"		"Speed"
+	}
+	"HudStrafeText"
+	{
+		"en"		"Strafes"
+	}
+	"HudNadesText"
+	{
+		"en"		"Flashes"
+	}
+	"HudTimeLeft"
+	{
+		"en"		"Timeleft"
+	}
+	"HudSync"
+	{
+		"en"		"Sync"
+	}
+	"HudPerfs"
+	{
+		"en"		"Perfect Jumps"
+	}
+	"HudPracticeMode"
+	{
+		"en"		"[Practice]"
+	}
+	"HudNoSpeedLimit"
+	{
+		"en"		"(No Speed Limit)"
+	}
+	"HudCustomSpeedLimit"
+	{
+		"#format"	"{1:d}"
+		"en"		"(Speed Limit: {1})"
+	}
+	// ---------- Menus ---------- //
+	"HUDMenuTitle"
+	{
+		"en"		"HUD Settings:"
+	}
+	"HudMaster"
+	{
+		"en"		"Master"
+	}
+	"HudCenter"
+	{
+		"en"		"Center Text"
+	}
+	"HudZoneHud"
+	{
+		"en"		"Zone HUD"
+	}
+	"HudObserve"
+	{
+		"en"		"Spectate HUD"
+	}
+	"HudSpectators"
+	{
+		"en"		"Spectator List"
+	}
+	"HudKeyOverlay"
+	{
+		"en"		"Key Display"
+	}
+	"HudHideWeapon"
+	{
+		"en"		"Hide Weapons"
+	}
+	"HudTopLeft"
+	{
+		"en"		"Top Left HUD (WR/PB)"
+	}
+	"Hud2dVel"
+	{
+		"en"		"Use 2D Velocity"
+	}
+	"HudNoRecordSounds"
+	{
+		"en"		"No Record Sounds"
+	}
+	"HudPracticeModeAlert"
+	{
+		"en"		"No Practice Mode Alert"
+	}
+	"HudRankText"
+	{
+		"en"		"Expected Rank"
+	}
+	"HudTrackText"
+	{
+		"en"		"Timer Track"
+	}
+	"HudSplitPbText"
+	{
+		"en"		"Split PB"
+	}
+	"HudMapTierText"
+	{
+		"en"		"Map Tier"
+	}
+	// ---------- Record Bots ---------- //
+	"ReplayText"
+	{
+		"en"		"Replay"
+	}
+	"NoReplayData"
+	{
+		//"en"		"No replay data loaded\nPress USE or beat #1 to play"
+		"en"		"Replay is Idling"
+	}
+	"NoReplayDataTF2"
+	{
+		"en"		"No replay data loaded\n!replay or beat #1 to play"
+	}
+	// ---------- Panels ---------- //
+	"SpectatorPersonal"
+	{
+		"en"		"Spectators"
+	}
+	"SpectatorWatching"
+	{
+		"en"		"Spectators"
+	}
+	// ---------- Commands ---------- //
+	"HudEnabledComponent"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s},{5:s}"
+		"en"		"{1}{2} {3}HUD Setting {4}Enabled{5}."
+	}
+	"HudDisabledComponent"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s},{5:s}"
+		"en"		"{1}{2} {3}HUD Setting {4}Disabled{5}."
+	}
+}

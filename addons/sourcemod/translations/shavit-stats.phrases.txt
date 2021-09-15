@@ -1,0 +1,213 @@
+"Phrases"
+{
+	// ---------- Errors ---------- //
+	"StatsMenuFailure"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{1}ERROR: {2}Could not open the stats menu."
+	}
+	// ---------- Map Completions ---------- //
+	"SelectTrack"
+	{
+		"en"		"Select timer track:"
+	}
+	"MapsDone"
+	{
+		"en"		"Maps done"
+	}
+	"MapsDoneFor"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"en"		"[{1}] Maps done for {2}: ({3})"
+	}
+	"MapsDoneOnStyle"
+	{
+		"#format"	"{1:s}"
+		"en"		"Maps done for {1} on style:"
+	}
+	"MapsLeft"
+	{
+		"en"		"Maps left"
+	}
+	"MapsLeftFor"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"en"		"[{1}] Maps left for {2}: ({3})"
+	}
+	"MapsLeftOnStyle"
+	{
+		"#format"	"{1:s}"
+		"en"		"Maps left for {1} on style:"
+	}
+	"MapsMenu"
+	{
+		"#format"	"{1:s}"
+		"en"		"[{1}] Stats:"
+	}
+	"MapsPoints"
+	{
+		"en"		"points"
+	}
+	"MapsJumps"
+	{
+		"en"		"jumps"
+	}
+	"Nope"
+	{
+		"en"		"nope"
+	}
+	"NoResults"
+	{
+		"en"		"No results."
+	}
+	// ---------- Player Profiles ---------- //
+	"Country"
+	{
+		"en"		"Country"
+	}
+	"FirstLogin"
+	{
+		"en"		"First login"
+	}
+	"LastLogin"
+	{
+		"en"		"Last login"
+	}
+	"MapCompletions"
+	{
+		"en"		"Map completions"
+	}
+	"MapBonusCompletions"
+	{
+		"en"		"Map bonus completions"
+	}
+	"MapSolobonusCompletions"
+	{
+		"en"		"Map solobonus completions"
+	}
+	"MapSWCompletions"
+	{
+		"en"		"Map sideways completions"
+	}
+	"MapBonusSWCompletions"
+	{
+		"en"		"Map bonus sideways completions"
+	}
+	"MapSolobonusSWCompletions"
+	{
+		"en"		"Map solobonus sideways completions"
+	}
+	"MapWCompletions"
+	{
+		"en"		"Map w-only completions"
+	}
+	"MapBonusWCompletions"
+	{
+		"en"		"Map bonus w-only completions"
+	}
+	"MapSolobonusWCompletions"
+	{
+		"en"		"Map solobonus w-only completions"
+	}
+	"MapHSWCompletions"
+	{
+		"en"		"Map half-sideways completions"
+	}
+	"MapBonusHSWCompletions"
+	{
+		"en"		"Map bonus half-sideways completions"
+	}
+	"MapSolobonusHSWCompletions"
+	{
+		"en"		"Map solobonus half-sideways completions"
+	}
+	"NoRecords"
+	{
+		"en"		"Nothing."
+	}
+	"Rank"
+	{
+		"en"		"Rank"
+	}
+	"Points"
+	{
+		"en"		"Points"
+	}
+	"PointsUnranked"
+	{
+		"en"		"Unranked"
+	}
+	"Profile"
+	{
+		"en"		"profile"
+	}
+	"WorldRecords"
+	{
+		"en"		"World records"
+	}
+	"BonusWorldRecords"
+	{
+		"en"		"Bonus world records"
+	}
+	"SolobonusWorldRecords"
+	{
+		"en"		"Solobonus world records"
+	}
+	"SWWorldRecords"
+	{
+		"en"		"Sideways world records"
+	}
+	"BonusSWWorldRecords"
+	{
+		"en"		"Bonus sideways world records"
+	}
+	"SolobonusSWWorldRecords"
+	{
+		"en"		"Solobonus sideways world records"
+	}
+	"WWorldRecords"
+	{
+		"en"		"W-only world records"
+	}
+	"BonusWWorldRecords"
+	{
+		"en"		"Bonus w-only world records"
+	}
+	"SolobonusWWorldRecords"
+	{
+		"en"		"Solobonus w-only world records"
+	}
+	"HSWWorldRecords"
+	{
+		"en"		"Half-sideways world records"
+	}
+	"BonusHSWWorldRecords"
+	{
+		"en"		"Bonus half-sideways world records"
+	}
+	"SolobonusHSWWorldRecords"
+	{
+		"en"		"Solobonus half-sideways world records"
+	}
+	// ---------- Record Data ---------- //
+	"Date"
+	{
+		"en"		"Date"
+	}
+	"Jumps"
+	{
+		"en"		"Jumps"
+	}
+	"Strafes"
+	{
+		"en"		"Strafes"
+	}
+	"Style"
+	{
+		"en"		"Style"
+	}
+	"Time"
+	{
+		"en"		"Time"
+	}
+}
