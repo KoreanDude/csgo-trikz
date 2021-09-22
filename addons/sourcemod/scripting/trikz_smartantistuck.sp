@@ -46,7 +46,7 @@ public Action OnPlayerRunCmd(int client)
 			{
 				SetEntProp(client, Prop_Data, "m_CollisionGroup", 2);
 				SetEntityRenderMode(client, RENDER_TRANSALPHA);
-				SetEntityRenderColor(client, Trikz_GetClientColorR(client), Trikz_GetClientColorG(client), Trikz_GetClientColorB(client), 100);
+				SetEntityRenderColor(client, 255, 255, 255, 75);
 				
 				gB_Check[client] = false;
 			}

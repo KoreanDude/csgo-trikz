@@ -3059,7 +3059,7 @@ public void TouchPost(int entity, int other)
 			SetEntProp(other, Prop_Data, "m_CollisionGroup", 2);
 			
 			SetEntityRenderMode(other, RENDER_TRANSALPHA);
-			SetEntityRenderColor(other, Trikz_GetClientColorR(other), Trikz_GetClientColorG(other), Trikz_GetClientColorB(other), 100);
+			SetEntityRenderColor(other, 255, 255, 255, 75);
 		}
 		
 		if(Shavit_GetClientTrack(other) != Track_Solobonus)

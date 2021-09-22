@@ -432,7 +432,7 @@ int H_TeleportMenu_Confirm(Menu menu, MenuAction action, int param1, int param2)
 						{
 							SetEntProp(param1, Prop_Data, "m_CollisionGroup", 2);
 							SetEntityRenderMode(param1, RENDER_TRANSALPHA);
-							SetEntityRenderColor(param1, Trikz_GetClientColorR(param1), Trikz_GetClientColorG(param1), Trikz_GetClientColorB(param1), 100);
+							SetEntityRenderColor(param1, 255, 255, 255, 75);
 							CreateTimer(2.0, EnableBlockAfterTpto, param1);
 						}
 					}
@@ -443,7 +443,7 @@ int H_TeleportMenu_Confirm(Menu menu, MenuAction action, int param1, int param2)
 						{
 							SetEntProp(sender, Prop_Data, "m_CollisionGroup", 2);
 							SetEntityRenderMode(sender, RENDER_TRANSALPHA);
-							SetEntityRenderColor(sender, Trikz_GetClientColorR(sender), Trikz_GetClientColorG(sender), Trikz_GetClientColorB(sender), 100);
+							SetEntityRenderColor(sender, 255, 255, 255, 75);
 							CreateTimer(2.0, EnableBlockAfterTpto, sender);
 						}
 					}

@@ -41,9 +41,9 @@
 			// search string "#SFUI_Notice_SprayPaint_TooClose" to find IsAbleToApplySpray and then go to the next function to find GetPlayerMaxSpeed. Then calculate the vtable offset.
 			"CCSPlayer::GetPlayerMaxSpeed"
 			{
-				"windows"   "505"
-				"linux"     "506"
-				"mac"       "506"
+				"windows"   "506"
+				"linux"     "507"
+				"mac"       "507"
 			}
 			// add 1 to the css offset and hope it works
 			"CGameRules::IsSpawnPointValid"
@@ -63,8 +63,8 @@
 			// then find the vtable from references and CBasePlayer::UpdateStepSound is right before PlayStepSound
 			"CBasePlayer::UpdateStepSound"
 			{
-				"windows"   "408"
-				"linux"     "409"
+				"windows"   "409"
+				"linux"     "410"
 			}
 		}
 
@@ -157,6 +157,13 @@
 			{
 				"windows"   "\x55\x8B\xEC\x83\xEC\x08\x56\x8B\xF1\x8B\x86"
 				"linux"     "@_ZN11CBaseEntity28PhysicsCheckForEntityUntouchEv"
+			}
+			// search string: "Could not add bot to the game: Team is full"
+			// protip: on csgo we just use mp_randomspawn instead.
+			"CCSGameRules::TeamFull"
+			{
+				"windows"   "\x55\x8B\xEC\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\x45\x2A\x83\xE8\x02"
+				"linux"     "@_ZN12CCSGameRules8TeamFullEi"
 			}
 		}
 	}
