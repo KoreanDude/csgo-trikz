@@ -25,6 +25,7 @@ public DisplayMenu_TrikzStats(Client)
 	AddMenuItem(MenuHandle, "SSJ", "Six Jump");
 	AddMenuItem(MenuHandle, "LJS", "Long Jump");
 	AddMenuItem(MenuHandle, "Button", "Button");
+	AddMenuItem(MenuHandle, "Turn Around", "Turn Around");
 	SetMenuPagination(MenuHandle, MENU_NO_PAGINATION);
 	SetMenuExitButton(MenuHandle, true);
 
@@ -65,6 +66,10 @@ public MenuHandler_TrikzStats(Handle:menu, MenuAction:action, client, select)
 		if(StrEqual(MenuItem, "Button", false))
 		{
 			FakeClientCommandEx(client, "say !button");
+		}
+		if(StrEqual(MenuItem, "Turn Around", false))
+		{
+			FakeClientCommandEx(client, "say !ta");
 		}
 		DisplayMenu_TrikzStats(client);
 	}

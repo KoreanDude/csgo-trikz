@@ -16,7 +16,7 @@ Handle gH_Forwards_OnBreakPartner = null;
 public Plugin myinfo =
 {
 	name = "Partner system",
-	author = "Shavit, Smesh, Modified by. SHIM",
+	author = "shavit (trikz redux), modified by Smesh, SHIM",
 	description = "Make able to be as partner for mate.",
 	version = "14.01.2021",
 	url = "https://steamcommunity.com/id/smesh292/"
@@ -291,7 +291,7 @@ int Partner_MenuHandler(Menu menuask, MenuAction action, int param1, int param2)
 					
 					case 1:
 					{
-						CPrintToChat(client, "{green}[Trikz]{lime}%N {lightgreen}has denied your partnership request.", param1);
+						CPrintToChat(client, "{green}[Trikz]{lime} %N {lightgreen}has denied your partnership request.", param1);
 						CPrintToChat(param1, "{green}[Trikz]{lightgreen} You denied partnership request with {lime}%N.", client);
 					}
 				}
