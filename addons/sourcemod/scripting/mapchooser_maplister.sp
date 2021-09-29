@@ -8,15 +8,6 @@ ConVar mcr_delete_offical_map;
 ConVar mcr_generate_mapcycle;
 ConVar mcr_generate_mapgroup;
 
-public Plugin myinfo =
-{
-	name = "[CS:GO] Maplister",
-	author = "Kxnrl, Modified by. SHIM",
-	description = "",
-	version = "1.0",
-	url = ""
-};
-
 public void OnPluginStart()
 {
     mcr_delete_offical_map = CreateConVar("mcr_delete_offical_map", "1", "auto-delete offical maps", _, true, 0.0, true, 1.0);
@@ -274,6 +265,11 @@ static bool IsOfficalMap(const char[] map)
 		officalmaps.PushString("de_mocha");
 		officalmaps.PushString("de_pitstop");
 		officalmaps.PushString("lobby_mapveto");
+		officalmaps.PushString("cs_insertion2");
+		officalmaps.PushString("de_extraction");
+		officalmaps.PushString("de_ravine");
+		officalmaps.PushString("dz_county");
+		officalmaps.PushString("de_basalt");
     }
 
     return (officalmaps.FindString(map) > -1);
