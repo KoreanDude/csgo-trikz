@@ -14,10 +14,14 @@ bool gB_checkpoint[MAXPLAYERS + 1][3];
 bool gB_IsCPLoaded;
 float gF_autocheckpoint[MAXPLAYERS + 1][3][3];
 
+float gF_checkpoint_command[MAXPLAYERS + 1][256][3][3];
+bool gB_checkpoint_command[MAXPLAYERS + 1][256];
+int cpnumber_command[MAXPLAYERS + 1] = 0;
+
 public Plugin myinfo =
 {
 	name = "Checkpoints",
-	author = "https://github.com/Figawe2/trikz-plugin (denwo), modified by Smesh",
+	author = "https://github.com/Figawe2/trikz-plugin (denwo), modified by Smesh, SHIM",
 	description = "Make able to use checkpoints.",
 	version = "14.01.2021",
 	url = "https://steamcommunity.com/id/smesh292/"
@@ -44,6 +48,10 @@ public void OnPluginStart()
 	{
 		RegConsoleCmd(gS_checkpoint[i], Cmd_Checkpoint, "Checkpoints menu");
 	}
+	
+	RegConsoleCmd("sm_save", Command_Save);
+	RegConsoleCmd("sm_tel", Command_Teleport);
+	RegConsoleCmd("sm_tele", Command_Teleport);
 }
 
 public void OnClientPutInServer(int client)
@@ -52,7 +60,7 @@ public void OnClientPutInServer(int client)
 	{
 		for(int i = 0; i < 2; i++)
 		{
-			gB_restore[client][i] = false;
+			gB_restore[client][i] = true;
 		}
 		
 		for(int i = 0; i < 3; i++)
@@ -60,6 +68,7 @@ public void OnClientPutInServer(int client)
 			gB_checkpoint[client][i] = false;
 		}
 	}
+	cpnumber_command[client] = 0;
 }
 
 public void Trikz_OnBoost(int client)
@@ -79,19 +88,92 @@ public void Trikz_OnBoost(int client)
 	}
 }
 
+Action Command_Save(int client, int args)
+{
+	float origin[3];
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", origin);
+	float angles[3];
+	GetClientEyeAngles(client, angles);
+	float velocity[3];
+	GetEntPropVector(client, Prop_Data, "m_vecVelocity", velocity);
+	cpnumber_command[client] += 1;
+	gF_checkpoint_command[client][cpnumber_command[client]][0] = origin;
+	gF_checkpoint_command[client][cpnumber_command[client]][1] = angles;
+	gF_checkpoint_command[client][cpnumber_command[client]][2] = velocity;
+	gB_checkpoint_command[client][cpnumber_command[client]] = true;
+	
+	CPrintToChat(client, "{green}[Trikz]{lightgreen} Saved {lime}#%i", cpnumber_command[client]);
+}
+
+Action Command_Teleport(int client, int args)
+{
+	if (args < 1)
+	{
+		CPrintToChat(client, "{green}[Trikz]{lightgreen} Usage: sm_tel or sm_tele <number>");
+		return Plugin_Handled;
+	}
+	
+	char sArg[6];
+	GetCmdArg(1, sArg, sizeof(sArg));
+	int cpnum = StringToInt(sArg);
+	cpnumber_command[client] = cpnum;
+	
+	if(IsValidClient(client))
+	{
+		if(gB_checkpoint_command[client][cpnumber_command[client]])
+		{
+			float origin[3];
+			origin = gF_checkpoint_command[client][cpnumber_command[client]][0];
+			float angles[3];
+			angles = gF_checkpoint_command[client][cpnumber_command[client]][1];
+			float velocity[3];
+			velocity = gF_checkpoint_command[client][cpnumber_command[client]][2];
+			bool b[2];
+			b[0] = gB_restore[client][0];
+			b[1] = gB_restore[client][1];
+			gB_IsCPLoaded = true;
+			
+			if(b[0] && b[1])
+			{		
+				TeleportEntity(client, origin, angles, velocity);
+			}
+			
+			if(!b[0] && b[1])
+			{		
+				TeleportEntity(client, origin, NULL_VECTOR, velocity);
+			}
+			
+			if(b[0] && !b[1])
+			{		
+				TeleportEntity(client, origin, angles, view_as<float>({0.0, 0.0, 0.0}));
+			}
+			
+			if(!b[0] && !b[1])
+			{	
+				TeleportEntity(client, origin, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+			}
+			
+			RequestFrame(RF_frameFirst, client);
+		}
+	}
+	
+	return Plugin_Handled;
+}
+
+
 Action Cmd_Checkpoint(int client, int args)
-{	
+{
 	Menu menu = new Menu(H_CheckpointPanel);
-	menu.SetTitle("Checkpoints menu\n ");
-	menu.AddItem("save1", "Save checkpoint 1");
-	menu.AddItem("load1", "Load checkpoint 1\n ", gB_checkpoint[client][0] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("save2", "Save checkpoint 2");
-	menu.AddItem("load2", "Load checkpoint 2\n ", gB_checkpoint[client][1] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("loadautocp", "Load auto-cp\n ");
+	menu.SetTitle("Checkpoints Menu\n ");
+	menu.AddItem("save1", "Save Checkpoint 1");
+	menu.AddItem("load1", "Load Checkpoint 1\n ", gB_checkpoint[client][0] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	menu.AddItem("save2", "Save Checkpoint 2");
+	menu.AddItem("load2", "Load Checkpoint 2\n ", gB_checkpoint[client][1] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	menu.AddItem("loadautocp", "Load Auto-CP\n ");
 	char sDisplay[64];
-	FormatEx(sDisplay, sizeof(sDisplay), "Restore angles [%s]", gB_restore[client][0] ? "ON" : "OFF");
+	FormatEx(sDisplay, sizeof(sDisplay), "Restore Angles [%s]", gB_restore[client][0] ? "ON" : "OFF");
 	menu.AddItem("restoreang", sDisplay);
-	FormatEx(sDisplay, sizeof(sDisplay), "Restore velocity [%s]\n ", gB_restore[client][1] ? "ON" : "OFF");
+	FormatEx(sDisplay, sizeof(sDisplay), "Restore Velocity [%s]\n ", gB_restore[client][1] ? "ON" : "OFF");
 	menu.AddItem("restorevel", sDisplay);
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
@@ -111,11 +193,6 @@ int H_CheckpointPanel(Menu menu, MenuAction action, int param1, int param2)
 			
 			if(StrEqual(sItem, "save1"))
 			{
-				if(!IsPlayerAlive(param1))
-				{
-					CPrintToChat(param1, "{green}[Trikz]{lightgreen} You must be alive to use this feature!");
-				}
-				
 				SaveCP(param1, 1);
 			}
 			
@@ -141,11 +218,6 @@ int H_CheckpointPanel(Menu menu, MenuAction action, int param1, int param2)
 			
 			if(StrEqual(sItem, "save2"))
 			{
-				if(!IsPlayerAlive(param1))
-				{
-					CPrintToChat(param1, "{green}[Trikz]{lightgreen} You must be alive to use this feature!");
-				}
-				
 				SaveCP(param1, 2);
 			}
 			
