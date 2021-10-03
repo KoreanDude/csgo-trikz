@@ -16,6 +16,7 @@ float gF_autocheckpoint[MAXPLAYERS + 1][3][3];
 
 float gF_checkpoint_command[MAXPLAYERS + 1][256][3][3];
 bool gB_checkpoint_command[MAXPLAYERS + 1][256];
+bool gB_NotCommand[MAXPLAYERS + 1] = false;
 int cpnumber_command[MAXPLAYERS + 1] = 0;
 
 public Plugin myinfo =
@@ -122,38 +123,15 @@ Action Command_Teleport(int client, int args)
 	{
 		if(gB_checkpoint_command[client][cpnumber_command[client]])
 		{
-			float origin[3];
-			origin = gF_checkpoint_command[client][cpnumber_command[client]][0];
-			float angles[3];
-			angles = gF_checkpoint_command[client][cpnumber_command[client]][1];
-			float velocity[3];
-			velocity = gF_checkpoint_command[client][cpnumber_command[client]][2];
-			bool b[2];
-			b[0] = gB_restore[client][0];
-			b[1] = gB_restore[client][1];
-			gB_IsCPLoaded = true;
-			
-			if(b[0] && b[1])
-			{		
-				TeleportEntity(client, origin, angles, velocity);
+			if(Shavit_GetTimerStatus(client) == Timer_Running)
+			{
+				OpenStopWarningMenu(client);
+				gB_NotCommand[client] = false;
 			}
-			
-			if(!b[0] && b[1])
-			{		
-				TeleportEntity(client, origin, NULL_VECTOR, velocity);
+			else
+			{
+				LoadCP_command(client);
 			}
-			
-			if(b[0] && !b[1])
-			{		
-				TeleportEntity(client, origin, angles, view_as<float>({0.0, 0.0, 0.0}));
-			}
-			
-			if(!b[0] && !b[1])
-			{	
-				TeleportEntity(client, origin, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-			}
-			
-			RequestFrame(RF_frameFirst, client);
 		}
 	}
 	
@@ -206,7 +184,7 @@ int H_CheckpointPanel(Menu menu, MenuAction action, int param1, int param2)
 				if(Shavit_GetTimerStatus(param1) == Timer_Running)
 				{
 					OpenStopWarningMenu(param1);
-					
+					gB_NotCommand[param1] = true;
 					return view_as<int>(Plugin_Continue);
 				}
 				
@@ -231,7 +209,7 @@ int H_CheckpointPanel(Menu menu, MenuAction action, int param1, int param2)
 				if(Shavit_GetTimerStatus(param1) == Timer_Running)
 				{
 					OpenStopWarningMenu(param1);
-					
+					gB_NotCommand[param1] = true;
 					return view_as<int>(Plugin_Continue);
 				}
 				
@@ -251,7 +229,7 @@ int H_CheckpointPanel(Menu menu, MenuAction action, int param1, int param2)
 				if(Shavit_GetTimerStatus(param1) == Timer_Running)
 				{
 					OpenStopWarningMenu(param1);
-					
+					gB_NotCommand[param1] = true;
 					return view_as<int>(Plugin_Continue);
 				}
 				
@@ -368,7 +346,12 @@ int MenuHandler_StopWarning(Menu menu, MenuAction action, int param1, int param2
 		if(StrEqual(sInfo, "yes"))
 		{
 			Shavit_StopTimer(param1);
-			Cmd_Checkpoint(param1, 1);
+			
+			if(gB_NotCommand[param1])
+			{
+				Cmd_Checkpoint(param1, 1);
+				gB_NotCommand[param1] = false;
+			}
 			
 			if(Trikz_FindPartner(param1) != -1)
 			{
@@ -378,7 +361,11 @@ int MenuHandler_StopWarning(Menu menu, MenuAction action, int param1, int param2
 		
 		else if(StrEqual(sInfo, "no"))
 		{
-			Cmd_Checkpoint(param1, 1);
+			if(gB_NotCommand[param1])
+			{
+				Cmd_Checkpoint(param1, 1);
+				gB_NotCommand[param1] = false;
+			}
 		}
 	}
 
@@ -426,6 +413,45 @@ int LoadCP(int client, int cpnumber)
 			
 			RequestFrame(RF_frameFirst, client);
 		}
+	}
+}
+
+void LoadCP_command(int client)
+{
+	if(IsValidClient(client))
+	{
+		float origin[3];
+		origin = gF_checkpoint_command[client][cpnumber_command[client]][0];
+		float angles[3];
+		angles = gF_checkpoint_command[client][cpnumber_command[client]][1];
+		float velocity[3];
+		velocity = gF_checkpoint_command[client][cpnumber_command[client]][2];
+		bool b[2];
+		b[0] = gB_restore[client][0];
+		b[1] = gB_restore[client][1];
+		gB_IsCPLoaded = true;
+		
+		if(b[0] && b[1])
+		{		
+			TeleportEntity(client, origin, angles, velocity);
+		}
+		
+		if(!b[0] && b[1])
+		{		
+			TeleportEntity(client, origin, NULL_VECTOR, velocity);
+		}
+		
+		if(b[0] && !b[1])
+		{		
+			TeleportEntity(client, origin, angles, view_as<float>({0.0, 0.0, 0.0}));
+		}
+		
+		if(!b[0] && !b[1])
+		{	
+			TeleportEntity(client, origin, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		}
+		
+		RequestFrame(RF_frameFirst, client);
 	}
 }
 
