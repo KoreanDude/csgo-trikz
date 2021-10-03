@@ -94,7 +94,7 @@ int g_PlayerStates[MAXPLAYERS + 1][PlayerState];
 public Plugin myinfo = 
 {
 	name = "[Trikz] Stats RB",
-	author = "Skipper, Modified by. SHIM"
+	author = "Skipper, Smesh, Modified by. SHIM"
 }
 
 bool IsValidClient(int client, bool bAlive = false)
@@ -253,7 +253,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	SpectatorCheck(client);
 	
-	if(IsPlayerAlive(client) && g_bJumpAfterRb[client])
+	if(gI_RBStats[client] == 1 && IsPlayerAlive(client) && g_bJumpAfterRb[client])
 	{		
 		float fGravity = GetEntPropFloat(client, Prop_Data, "m_flGravity");
 		
