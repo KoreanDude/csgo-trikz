@@ -130,13 +130,11 @@ public Action OnPlayerRunCmd(int client) {
 			vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -g_fFlashMultiplier;
 			vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -g_fFlashMultiplier;
 			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2] * 0.94;
-		}
-		else
-		{
+			
+		} else {
+		
 			vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -0.9;
 			vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -0.9;
-			
-			PrintToConsoleAll("%f", vClientAbsVelocity[0]);
 			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2];
 		}
 		
