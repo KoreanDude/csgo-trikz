@@ -299,7 +299,7 @@ int Partner_MenuHandler(Menu menuask, MenuAction action, int param1, int param2)
 			
 			else
 			{
-				CPrintToChat(param1, "{green}[Trikz]{lime}%N {lightgreen} already have a partner.", client);
+				CPrintToChat(param1, "{green}[Trikz]{lime} %N {lightgreen} already have a partner.", client);
 			}
 		}
 		
