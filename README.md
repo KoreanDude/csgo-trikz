@@ -11,4 +11,4 @@ Server preview - steam://connect/gosev.iptime.org:13579
 
 <b>Special Thanks to</b>
 
-Phoenix, Flippy, Muffin, Lilly, Ekr, Kien
+Phoenix, Flippy, Muffin, Lilly, Ekr, Kien, rr11
