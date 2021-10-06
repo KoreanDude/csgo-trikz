@@ -17,7 +17,7 @@ int gI_HideSetting[MAXPLAYERS + 1]
 
 public Plugin myinfo = 
 {
-	name = "Player collision, Glow",
+	name = "Player collision for trikz solidity",
 	author = "Smesh, Modified by. SHIM",
 	description = "Make able to collide only with 'teammate'",
 	version = "0.1",
@@ -61,31 +61,16 @@ public void OnClientCookiesCached(int client)
 	char sCookie_Glow[12]
 	
 	GetClientCookie(client, gH_GlowColor, sCookie_Glow, sizeof(sCookie_Glow))
-	if (StringToInt(sCookie_Glow) == 0)
-	{
-		gI_GlowColor[client] = 3
-		return
-	}
 	gI_GlowColor[client] = StringToInt(sCookie_Glow)
 	
 	char sCookie_Glow2[12]
 	
 	GetClientCookie(client, gH_GlowStyle, sCookie_Glow2, sizeof(sCookie_Glow2))
-	if (StringToInt(sCookie_Glow2) == 0)
-	{
-		gI_GlowStyle[client] = 2
-		return
-	}
 	gI_GlowStyle[client] = StringToInt(sCookie_Glow2)
 	
 	char sCookie_Hide[12]
 	
 	GetClientCookie(client, gH_HideSetting, sCookie_Hide, sizeof(sCookie_Hide))
-	if (StringToInt(sCookie_Hide) == 0)
-	{
-		gI_HideSetting[client] = 1
-		return
-	}
 	gI_HideSetting[client] = StringToInt(sCookie_Hide)
 }
 

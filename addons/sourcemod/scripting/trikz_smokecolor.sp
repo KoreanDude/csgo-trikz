@@ -3,17 +3,17 @@
 #include <sdkhooks>
 #include <clientprefs>
 
-public Plugin myinfo =
-{
-	name        = "Smoke Color",
-	author      = "SHIM",
-	description = "",
-	version     = "",
-	url         = "https://steamcommunity.com/id/ultrashim/"
-};
-
 Handle gH_SmokeSetting = INVALID_HANDLE
 int gI_SmokeSetting[MAXPLAYERS + 1]
+
+public Plugin myinfo = 
+{
+	name =			"Smoke(Flash) Color",
+	author = 		"SHIM",
+	description =	"",
+	version =		"0.1",
+	url =			""
+}
 
 public void OnPluginStart()
 {
@@ -68,12 +68,6 @@ public void OnClientCookiesCached(int client)
 {
 	char sCookie[12]
 	GetClientCookie(client, gH_SmokeSetting, sCookie, sizeof(sCookie))
-	
-	if (StringToInt(sCookie) == 0)
-	{
-		gI_SmokeSetting[client] = 3
-		return
-	}
 	gI_SmokeSetting[client] = StringToInt(sCookie)
 }
 
