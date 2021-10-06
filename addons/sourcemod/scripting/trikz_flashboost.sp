@@ -8,6 +8,7 @@
 #include <sdkhooks>
 //#include <clientprefs>
 #include <trikznobug>
+#include <trikz>
 
 // FlashBoost Extra Settings
 #define REMOVE_FLASH 1
@@ -19,6 +20,7 @@ float g_fFlashMultiplier = 0.869325;
 
 // FlashBoost
 bool g_bFlashBoost[MAXPLAYERS+1];
+bool g_bAirFlash[MAXPLAYERS+1];
 float g_vFlashAbsVelocity[MAXPLAYERS+1][3];
 
 // SkyBoost
@@ -47,12 +49,32 @@ public int Native_Trikz_SkyFix(Handle plugin, int numParams) {
 	return 1;
 }
 
-
 public void OnPluginStart() {
 	if (bLateLoad)
 		for (int i = 1; i <= MaxClients; i++)
 			if (IsClientConnected(i) && IsClientInGame(i))
 				OnClientPutInServer(i);
+				
+	HookEvent("grenade_thrown", Event_GrenadeThrown);
+}
+
+public Action Event_GrenadeThrown(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	if(!IsValidClient(client))
+		return;
+	
+	if(!(GetEntityFlags(client) & FL_ONGROUND))
+	{
+		PrintToConsole(client, "Jump Flashboost");
+		g_bAirFlash[client] = true;
+	}
+	else
+	{
+		PrintToConsole(client, "No Jump Flashboost");
+		g_bAirFlash[client] = false;
+	}
 }
 
 public void OnClientPutInServer(int client) {
@@ -102,13 +124,26 @@ public Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float
 public Action OnPlayerRunCmd(int client) {
 
 	if (g_bFlashBoost[client]) {
+	
 		float vClientAbsVelocity[3];
 		GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", vClientAbsVelocity);
 		
-		// 0,8693248760112110724220573123187
+		// 0.8693248760112110724220573123187
 		vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -g_fFlashMultiplier;
 		vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -g_fFlashMultiplier;
-		vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2] * 0.94;
+		
+		int iPartner = Trikz_FindPartner(client);
+		
+		if(g_bAirFlash[iPartner])
+		{
+			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2] * 0.94;
+			PrintToConsoleAll("%N Jump Flashboost, %f", client, vClientAbsVelocity[2]);
+		}
+		else
+		{
+			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2];
+			PrintToConsoleAll("%N No Jump Flashboost, %f", client, vClientAbsVelocity[2]);
+		}
 		
 		//PrintToChatAll("%f", vClientAbsVelocity[2]);
 		
@@ -116,8 +151,10 @@ public Action OnPlayerRunCmd(int client) {
 			vClientAbsVelocity[2] = 600.0;
 		
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vClientAbsVelocity);
+		
 		g_bFlashBoost[client] = false;
 	}
+	
 	return Plugin_Continue;
 }
 
