@@ -7,3 +7,7 @@ I'm can only make and edit a little code, Hopefully a good coder interested in C
 If you need a CS:GO trikz maps, please contact me. https://steamcommunity.com/id/ultrashim/
 
 Server preview - steam://connect/gosev.iptime.org:13579
+
+<b>Special Thanks to</b>
+
+Phoenix, Flippy, Muffin, Lilly, Ekr, Kien
