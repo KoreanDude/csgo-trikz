@@ -66,15 +66,9 @@ public Action Event_GrenadeThrown(Handle event, const char[] name, bool dontBroa
 		return;
 	
 	if(!(GetEntityFlags(client) & FL_ONGROUND))
-	{
-		PrintToConsole(client, "Jump Flashboost");
 		g_bAirFlash[client] = true;
-	}
 	else
-	{
-		PrintToConsole(client, "No Jump Flashboost");
 		g_bAirFlash[client] = false;
-	}
 }
 
 public void OnClientPutInServer(int client) {
@@ -128,24 +122,23 @@ public Action OnPlayerRunCmd(int client) {
 		float vClientAbsVelocity[3];
 		GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", vClientAbsVelocity);
 		
-		// 0.8693248760112110724220573123187
-		vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -g_fFlashMultiplier;
-		vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -g_fFlashMultiplier;
-		
 		int iPartner = Trikz_FindPartner(client);
 		
 		if(g_bAirFlash[iPartner])
 		{
+			// 0.8693248760112110724220573123187
+			vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -g_fFlashMultiplier;
+			vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -g_fFlashMultiplier;
 			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2] * 0.94;
-			PrintToConsoleAll("%N Jump Flashboost, %f", client, vClientAbsVelocity[2]);
 		}
 		else
 		{
+			vClientAbsVelocity[0] += g_vFlashAbsVelocity[client][0] * -0.9;
+			vClientAbsVelocity[1] += g_vFlashAbsVelocity[client][1] * -0.9;
+			
+			PrintToConsoleAll("%f", vClientAbsVelocity[0]);
 			vClientAbsVelocity[2] = g_vFlashAbsVelocity[client][2];
-			PrintToConsoleAll("%N No Jump Flashboost, %f", client, vClientAbsVelocity[2]);
 		}
-		
-		//PrintToChatAll("%f", vClientAbsVelocity[2]);
 		
 		if(vClientAbsVelocity[2] <= 200.0)
 			vClientAbsVelocity[2] = 600.0;
