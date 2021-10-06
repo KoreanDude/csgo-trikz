@@ -51,8 +51,11 @@ public Action SpawnPostFlash(int entity, int other)
 {
 	int Owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity")
 	
-	if(gI_SmokeSetting[Owner] == 0)	SetEntityModel(entity, "models/weapons/w_eq_smokegrenade_thrown.mdl");
-	if(gI_SmokeSetting[Owner] >= 1)
+	if(gI_SmokeSetting[Owner] == 0)
+	{
+		SetEntityModel(entity, "models/weapons/w_eq_smokegrenade_thrown.mdl");
+	}
+	else
 	{
 		SetEntityModel(entity, "models/yatta/smokegrenade_trikz.mdl");
 		
