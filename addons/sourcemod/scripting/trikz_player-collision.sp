@@ -8,33 +8,36 @@
 #include <customplayerskins>
 #include <clientprefs>
 
-Handle gH_GlowColor = INVALID_HANDLE
-int gI_GlowColor[MAXPLAYERS + 1]
 Handle gH_GlowStyle = INVALID_HANDLE
 int gI_GlowStyle[MAXPLAYERS + 1]
+Handle gH_GlowColor = INVALID_HANDLE
+int gI_GlowColor[MAXPLAYERS + 1]
 Handle gH_HideSetting = INVALID_HANDLE
 int gI_HideSetting[MAXPLAYERS + 1]
 
 public Plugin myinfo = 
 {
-	name = "Player collision for trikz solidity",
+	name = "Player collision, Glow",
 	author = "Smesh, Modified by. SHIM",
-	description = "Make able to collide only with 'teammate'",
+	description = "",
 	version = "0.1",
 	url = "http://www.sourcemod.net/"
 }
 
 public void OnPluginStart()
 {
-	gH_GlowColor = RegClientCookie("GlowColors", "GlowColors", CookieAccess_Private);
-	gH_GlowStyle = RegClientCookie("GlowStyle", "GlowStyle", CookieAccess_Private);
-	gH_HideSetting = RegClientCookie("HideSetting", "HideSetting", CookieAccess_Private);
+	gH_GlowStyle = RegClientCookie("Trikz_GlowStyle_TEST", "Trikz_GlowStyle", CookieAccess_Private);
+	gH_GlowColor = RegClientCookie("Trikz_GlowColor_TEST", "Trikz_GlowColor", CookieAccess_Private);
+	gH_HideSetting = RegClientCookie("Trikz_HideSetting_TEST", "Trikz_HideSetting", CookieAccess_Private);
 	
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("player_death", Event_PlayerDeath);
-	
+
 	RegConsoleCmd("sm_glow", Command_GlowMenu)
 	RegConsoleCmd("sm_hide", Command_Hide)
+	RegConsoleCmd("sm_gg", Command_gg)
+	
+	RegConsoleCmd("jointeam", Command_JoinTeam)
 	
 	for(int i = 1; i <= MaxClients; i++)
 	{
@@ -48,9 +51,9 @@ public void OnPluginStart()
 			}
 			else
 			{
-				gI_GlowColor[i] = 3
-				gI_GlowStyle[i] = 2
-				gI_HideSetting[i] = 1
+				gI_GlowStyle[i] = 0
+				gI_GlowColor[i] = 4
+				gI_HideSetting[i] = 2
 			}
 		}
 	}
@@ -58,20 +61,18 @@ public void OnPluginStart()
 
 public void OnClientCookiesCached(int client)
 {
-	char sCookie_Glow[12]
+	char sCookie[12]
 	
-	GetClientCookie(client, gH_GlowColor, sCookie_Glow, sizeof(sCookie_Glow))
-	gI_GlowColor[client] = StringToInt(sCookie_Glow)
+	GetClientCookie(client, gH_GlowStyle, sCookie, sizeof(sCookie))
+	gI_GlowStyle[client] = StringToInt(sCookie)
 	
-	char sCookie_Glow2[12]
+	GetClientCookie(client, gH_GlowColor, sCookie, sizeof(sCookie))
+	if (StringToInt(sCookie) == 0) gI_GlowColor[client] = 4;
+	else gI_GlowColor[client] = StringToInt(sCookie)
 	
-	GetClientCookie(client, gH_GlowStyle, sCookie_Glow2, sizeof(sCookie_Glow2))
-	gI_GlowStyle[client] = StringToInt(sCookie_Glow2)
-	
-	char sCookie_Hide[12]
-	
-	GetClientCookie(client, gH_HideSetting, sCookie_Hide, sizeof(sCookie_Hide))
-	gI_HideSetting[client] = StringToInt(sCookie_Hide)
+	GetClientCookie(client, gH_HideSetting, sCookie, sizeof(sCookie))
+	if (StringToInt(sCookie) == 0) gI_HideSetting[client] = 2;
+	else gI_HideSetting[client] = StringToInt(sCookie)
 }
 
 public void OnClientPutInServer(int client)
@@ -95,15 +96,14 @@ public GlowMenu(Client)
 	new Handle:MenuHandle = CreateMenu(MenuHandler_GlowMenu);
 
 	new String:Title[512];
-	Format(Title, sizeof(Title), "Partner's Glow Preference\n ");
+	Format(Title, sizeof(Title), "Set Partner's Glow\n ");
 	SetMenuTitle(MenuHandle, Title);
 
 	AddMenuItem(MenuHandle, "Style", "Style");
 	AddMenuItem(MenuHandle, "Color", "Color");
 	
-	SetMenuPagination(MenuHandle, MENU_NO_PAGINATION);
+	SetMenuExitBackButton(MenuHandle, true);
 	SetMenuExitButton(MenuHandle, true);
-
 	DisplayMenu(MenuHandle, Client, MENU_TIME_FOREVER);
 }
 
@@ -120,6 +120,9 @@ public MenuHandler_GlowMenu(Handle:menu, MenuAction:action, client, select)
 	
 	if(action == MenuAction_End)
 		CloseHandle(menu);
+	
+	if(action == MenuAction_Cancel && select == MenuCancel_ExitBack)
+		FakeClientCommand(client, "sm_c");
 }
 
 public GlowStyleMenu(Client)
@@ -136,7 +139,7 @@ public GlowStyleMenu(Client)
 	AddMenuItem(MenuHandle, "4", "4");
 	
 	SetMenuExitBackButton(MenuHandle, true);
-
+	SetMenuExitButton(MenuHandle, true);
 	DisplayMenu(MenuHandle, Client, MENU_TIME_FOREVER);
 }
 
@@ -162,9 +165,7 @@ public MenuHandler_GlowStyleMenu(Handle:menu, MenuAction:action, client, select)
 		{
 			if(IsPlayerAlive(iPartner))
 			{
-				DeleteGlow(client);
 				DeleteGlow(iPartner);
-				SetSkin(client);
 				SetSkin(iPartner);
 			}
 		}
@@ -194,7 +195,7 @@ public GlowColorMenu(Client)
 	AddMenuItem(MenuHandle, "Yellow", "Yellow");
 	
 	SetMenuExitBackButton(MenuHandle, true);
-
+	SetMenuExitButton(MenuHandle, true);
 	DisplayMenu(MenuHandle, Client, MENU_TIME_FOREVER);
 }
 
@@ -205,12 +206,12 @@ public MenuHandler_GlowColorMenu(Handle:menu, MenuAction:action, client, select)
 		new String:MenuItem[256];
 		GetMenuItem(menu, select, MenuItem, sizeof(MenuItem));
 
-		if(StrEqual(MenuItem, "None", false)) gI_GlowColor[client] = 0;
-		else if(StrEqual(MenuItem, "White", false)) gI_GlowColor[client] = 1;
-		else if(StrEqual(MenuItem, "Red", false)) gI_GlowColor[client] = 2;
-		else if(StrEqual(MenuItem, "Green", false)) gI_GlowColor[client] = 3;
-		else if(StrEqual(MenuItem, "Blue", false)) gI_GlowColor[client] = 4;
-		else if(StrEqual(MenuItem, "Yellow", false)) gI_GlowColor[client] = 5;
+		if(StrEqual(MenuItem, "None", false)) gI_GlowColor[client] = 1;
+		else if(StrEqual(MenuItem, "White", false)) gI_GlowColor[client] = 2;
+		else if(StrEqual(MenuItem, "Red", false)) gI_GlowColor[client] = 3;
+		else if(StrEqual(MenuItem, "Green", false)) gI_GlowColor[client] = 4;
+		else if(StrEqual(MenuItem, "Blue", false)) gI_GlowColor[client] = 5;
+		else if(StrEqual(MenuItem, "Yellow", false)) gI_GlowColor[client] = 6;
 		
 		char sCookie[12]
 		Format(sCookie, sizeof(sCookie), "%i", gI_GlowColor[client])
@@ -222,9 +223,7 @@ public MenuHandler_GlowColorMenu(Handle:menu, MenuAction:action, client, select)
 		{
 			if(IsPlayerAlive(iPartner))
 			{
-				DeleteGlow(client);
 				DeleteGlow(iPartner);
-				SetSkin(client);
 				SetSkin(iPartner);
 			}
 		}
@@ -238,16 +237,23 @@ public MenuHandler_GlowColorMenu(Handle:menu, MenuAction:action, client, select)
 		CloseHandle(menu);
 }
 
+Action Command_gg(int client, int args)
+{
+	CPrintToChat(client, "{green}[Trikz]{lightgreen} Style: %i Color: %i Hide: %i", gI_GlowStyle[client], gI_GlowColor[client], gI_HideSetting[client])
+	
+	return Plugin_Handled
+}
+
 Action Command_Hide(int client, int args)
 {
-	if(gI_HideSetting[client] == 0)
+	if(gI_HideSetting[client] == 1)
 	{
-		gI_HideSetting[client] = 1;
+		gI_HideSetting[client] = 2;
 		CPrintToChat(client, "{green}[Trikz]{lightgreen} The players are now hidden.")
 	}
 	else
 	{
-		gI_HideSetting[client] = 0;
+		gI_HideSetting[client] = 1;
 		CPrintToChat(client, "{green}[Trikz]{lightgreen} The players are now visible.")
 	}
 	
@@ -298,6 +304,16 @@ public Action:Event_PlayerSpawn(Handle:event, const String:name[], bool:broadcas
 	CreateTimer(0.1, Timer_SetModel, client);
 
 	return Plugin_Continue;
+}
+
+public Action:Command_JoinTeam(client, args)
+{
+	DeleteGlow(client);
+	
+	int iPartner = Trikz_FindPartner(client);
+	
+	if(iPartner != -1)
+		DeleteGlow(iPartner);
 }
 
 public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:broadcast)
@@ -369,7 +385,7 @@ public Trikz_OnBreakPartner(int client, int partner)
 
 Action Hook_SetTransmitHide(int entity, int client) //entity - me, client - loop all clients
 {
-	if((client != entity) && (0 < entity <= MaxClients) && gI_HideSetting[client] == 1 && IsPlayerAlive(client))
+	if((client != entity) && (0 < entity <= MaxClients) && gI_HideSetting[client] == 2 && IsPlayerAlive(client))
 	{
 		if(Shavit_GetClientTrack(entity) != Track_Solobonus)
 		{
@@ -389,10 +405,11 @@ Action Hook_SetTransmitHideGlow(int entity, int client) //entity - glow, client 
 {
 	new Owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	
-	if((client != Owner) && (0 < Owner <= MaxClients) && IsPlayerAlive(client) && gI_GlowColor[client] > 0)
+	if((client != Owner) && (0 < Owner <= MaxClients) && IsPlayerAlive(client) && gI_GlowColor[client] > 1)
 	{
 		if(Trikz_FindPartner(Owner) == client) //make visible partner
 			return Plugin_Continue
+		else return Plugin_Handled
 	}
 	return Plugin_Handled
 }
@@ -403,7 +420,7 @@ Action Hook_SetTransmitHideNade(int entity, int client) //entity - nade, client 
 	if(!IsValidClient(iEntOwner))
 		return Plugin_Handled
 	int iPartner = Trikz_FindPartner(iEntOwner)
-	if(gI_HideSetting[client] == 1 && IsPlayerAlive(client))
+	if(gI_HideSetting[client] == 2 && IsPlayerAlive(client))
 	{		
 		if(iEntOwner == client) //make visible own nade
 			return Plugin_Continue
@@ -545,46 +562,22 @@ stock SetSkin(client)
 		new entity = GetEntPropEnt(client, Prop_Send, "m_hRagdoll");
 
 		// 기존의 클라이언트가 가지고 있는 모델을 삭제
-		if(IsValidEdict(entity) == true)
+		if(IsValidEdict(entity))
 		{
 			AcceptEntityInput(entity, "kill");
 		}
 		
-		if(IsPlayerAlive(client) == true)
+		if(IsPlayerAlive(client))
 		{
 			// 그 다음에 스킨을 지정을 해주고
 			SetEntityModel(client, szModel);
 
 			// 글로우를 생성해야 됨.
-			if(gI_GlowColor[iPartner] == 1) CreateGlow(client, 255, 255, 255, 255, gI_GlowStyle[iPartner]);
-			else if(gI_GlowColor[iPartner] == 2) CreateGlow(client, 255, 0, 0, 255, gI_GlowStyle[iPartner]);
-			else if(gI_GlowColor[iPartner] == 3) CreateGlow(client, 0, 255, 0, 255, gI_GlowStyle[iPartner]);
-			else if(gI_GlowColor[iPartner] == 4) CreateGlow(client, 0, 250, 250, 255, gI_GlowStyle[iPartner]);
-			else if(gI_GlowColor[iPartner] == 5) CreateGlow(client, 255, 255, 0, 255, gI_GlowStyle[iPartner]);
-		}
-		
-		new String:szModelP[PLATFORM_MAX_PATH];
-		GetClientModel(client, szModelP, sizeof(szModelP));
-		
-		new entityP = GetEntPropEnt(iPartner, Prop_Send, "m_hRagdoll");
-
-		// 기존의 클라이언트가 가지고 있는 모델을 삭제
-		if(IsValidEdict(entityP) == true)
-		{
-			AcceptEntityInput(entityP, "kill");
-		}
-		
-		if(IsPlayerAlive(iPartner) == true)
-		{
-			// 그 다음에 스킨을 지정을 해주고
-			SetEntityModel(iPartner, szModelP);
-
-			// 글로우를 생성해야 됨.
-			if(gI_GlowColor[client] == 1) CreateGlow(iPartner, 255, 255, 255, 255, gI_GlowStyle[client]);
-			else if(gI_GlowColor[client] == 2) CreateGlow(iPartner, 255, 0, 0, 255, gI_GlowStyle[client]);
-			else if(gI_GlowColor[client] == 3) CreateGlow(iPartner, 0, 255, 0, 255, gI_GlowStyle[client]);
-			else if(gI_GlowColor[client] == 4) CreateGlow(iPartner, 0, 250, 250, 255, gI_GlowStyle[client]);
-			else if(gI_GlowColor[client] == 5) CreateGlow(iPartner, 255, 255, 0, 255, gI_GlowStyle[client]);
+			if(gI_GlowColor[iPartner] == 2) CreateGlow(client, 255, 255, 255, 255, gI_GlowStyle[iPartner]);
+			else if(gI_GlowColor[iPartner] == 3) CreateGlow(client, 255, 0, 0, 255, gI_GlowStyle[iPartner]);
+			else if(gI_GlowColor[iPartner] == 4) CreateGlow(client, 0, 255, 0, 255, gI_GlowStyle[iPartner]);
+			else if(gI_GlowColor[iPartner] == 5) CreateGlow(client, 0, 250, 250, 255, gI_GlowStyle[iPartner]);
+			else if(gI_GlowColor[iPartner] == 6) CreateGlow(client, 255, 255, 0, 255, gI_GlowStyle[iPartner]);
 		}
 	}
 	// 이렇게 쌈박자가 맞아야 기존 레그돌 삭제 및 새로운 스킨에 글로우가 잘 적용됨.
