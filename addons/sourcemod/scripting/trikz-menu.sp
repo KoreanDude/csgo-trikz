@@ -119,16 +119,7 @@ int Trikz_MenuHandler(Menu menu, MenuAction action, int param1, int param2)
 			
 			if(StrEqual(sItem, "sm_cp"))
 			{
-				if(!IsPlayerAlive(param1))
-				{
-					TrikzMenu(param1);
-					CPrintToChat(param1, "{green}[Trikz]{lightgreen} You must be alive to use this feature!");
-				}
-				
-				else
-				{
-					FakeClientCommandEx(param1, "sm_cp");
-				}
+				FakeClientCommandEx(param1, "sm_cp");
 				
 				return view_as<int>(Plugin_Continue);
 			}
